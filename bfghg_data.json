@@ -1,0 +1,85 @@
+import tkinker as tk
+from tkinker import ttk, messagebox
+import json
+import os
+from datetime import datetime
+
+import tkinter as tk
+from tkinter import ttk, messagebox
+from datetime import datetime
+import json
+import os
+from tkcalendar import DateEntry
+
+class ExpenseTracker:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Expense Tracker")
+        self.root.geometry("900x600")
+
+        # Категории расходов
+        self.categories = ["Еда", "Транспорт", "Развлечения", "Жилье",
+                          "Одежда", "Здоровье", "Образование", "Прочее"]
+
+        # Данные расходов
+        self.expenses = []
+
+        # Загрузка данных при запуске
+        self.load_data()
+
+        # Создание интерфейса
+        self.create_widgets()
+
+    def create_widgets(self):
+        # Основной фрейм для ввода данных
+        input_frame = ttk.LabelFrame(self.root, text="Добавить расход", padding=10)
+        input_frame.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
+
+        # Поле для суммы
+        ttk.Label(input_frame, text="Сумма:").grid(row=0, column=0, sticky="w")
+        self.amount_var = tk.StringVar()
+        self.amount_entry = ttk.Entry(input_frame, textvariable=self.amount_var, width=20)
+        self.amount_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        # Поле для категории
+        ttk.Label(input_frame, text="Категория:").grid(row=0, column=2, sticky="w", padx=10)
+        self.category_var = tk.StringVar()
+        self.category_combo = ttk.Combobox(input_frame, textvariable=self.category_var,
+                                          values=self.categories, width=15, state="readonly")
+        self.category_combo.grid(row=0, column=3, padx=5, pady=5)
+
+        # Поле для даты
+        ttk.Label(input_frame, text="Дата:").grid(row=0, column=4, sticky="w", padx=10)
+        self.date_entry = DateEntry(input_frame, width=12, background='darkblue',
+                                   foreground='white', borderwidth=2, date_pattern='dd/mm/yyyy')
+        self.date_entry.grid(row=0, column=5, padx=5, pady=5)
+
+        # Кнопка добавления расхода
+        self.add_button = ttk.Button(input_frame, text="Добавить расход",
+                                    command=self.add_expense)
+        self.add_button.grid(row=0, column=6, padx=10, pady=5)
+
+        # Фрейм для фильтрации
+        filter_frame = ttk.LabelFrame(self.root, text="Фильтрация", padding=10)
+        filter_frame.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
+
+        # Фильтр по категории
+        ttk.Label(filter_frame, text="Категория:").grid(row=0, column=0, sticky="w")
+        self.filter_category_var = tk.StringVar()
+        self.filter_category_combo = ttk.Combobox(filter_frame,
+                                                 textvariable=self.filter_category_var,
+                                                 values=["Все"] + self.categories,
+                                                 width=15, state="readonly")
+        self.filter_category_combo.grid(row=0, column=1, padx=5, pady=5)
+        self.filter_category_combo.set("Все")
+
+        # Фильтр по дате (от)
+        ttk.Label(filter_frame, text="Дата от:").grid(row=0, column=2, sticky="w", padx=10)
+        self.filter_date_from = DateEntry(filter_frame, width=12, background='darkblue',
+                                         foreground='white', borderwidth=2,
+                                         date_pattern='dd/mm/yyyy')
+        self.filter_date_from.grid(row=0, column=3, padx=5, pady=5)
+
+        # Фильтр по дате (до)
+        ttk.Label(filter_frame, text="до:").grid(row=0, column=4, sticky="w")
+        self.filter_date_to = Date
